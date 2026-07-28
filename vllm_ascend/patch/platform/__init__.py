@@ -45,6 +45,9 @@ import vllm_ascend.patch.platform.patch_balance_schedule  # noqa
 
 import vllm_ascend.patch.platform.patch_kv_cache_coordinator  # noqa
 import vllm_ascend.patch.platform.patch_speculative_config  # noqa
+# KV-Aware Decode: active_inc / active_dec ZMQ PUB (MindIE-PyMotor Active Decode).
+# Gated by VLLM_ASCEND_ENABLE_ACTIVE_DECODE_EVENTS at tracker attach time.
+import vllm_ascend.patch.platform.patch_active_decode_events  # noqa
 
 if not vllm_version_is("0.23.0"):
     import vllm_ascend.patch.platform.patch_fused_moe  # noqa

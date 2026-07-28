@@ -110,6 +110,21 @@ env_variables: dict[str, Callable[[], Any]] = {
     # Control the aclrtMemcpyBatchAsync compile path for KV cache offloading.
     # "1": force enable, "0": force disable, None: auto-detect from CANN headers.
     "VLLM_ASCEND_ENABLE_BATCH_MEMCPY": lambda: os.getenv("VLLM_ASCEND_ENABLE_BATCH_MEMCPY", None),
+    # KV-Aware Decode: enable Decode Engine ZMQ PUB of active_inc / active_dec
+    # (MindIE-PyMotor Active Decode plane). Default off.
+    "VLLM_ASCEND_ENABLE_ACTIVE_DECODE_EVENTS": lambda: bool(
+        int(os.getenv("VLLM_ASCEND_ENABLE_ACTIVE_DECODE_EVENTS", "0"))
+    ),
+    # ZMQ PUB bind/connect endpoint for active_* events, e.g. "tcp://*:15570".
+    # Required when VLLM_ASCEND_ENABLE_ACTIVE_DECODE_EVENTS=1.
+    "VLLM_ASCEND_ACTIVE_DECODE_ZMQ_ENDPOINT": lambda: os.getenv(
+        "VLLM_ASCEND_ACTIVE_DECODE_ZMQ_ENDPOINT", ""
+    ),
+    # Optional ZMQ topic prefix (empty string matches conductor SUB "" default).
+    "VLLM_ASCEND_ACTIVE_DECODE_ZMQ_TOPIC": lambda: os.getenv("VLLM_ASCEND_ACTIVE_DECODE_ZMQ_TOPIC", ""),
+    # Optional instance_id stamped on the batch (observability; conductor
+    # resolves worker from registration). Empty → omit from payload.
+    "VLLM_ASCEND_ACTIVE_DECODE_INSTANCE_ID": lambda: os.getenv("VLLM_ASCEND_ACTIVE_DECODE_INSTANCE_ID", ""),
 }
 
 # end-env-vars-definition
